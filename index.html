@@ -11,7 +11,7 @@
         <img src = "harperlogo.png" width = "153" height = "198.5">
       </div>
       <div>
-        <h2> Made by Victor Brown</h3>
+        <h2> Made by Victor Brown</h2>
         <h4> Styled by Memphis Cutchlow & Madeline Busse</h4>
       </div>
     </div>      
@@ -20,7 +20,14 @@
       </div>
       <div>
         <br />
+
+
         <form id="form1">
+          
+          <input type="checkbox" id="object" name="copyObject" value="object" checked="checked">
+          <label for="object">Copy Object?</label><br>
+
+
           <input
             id="hundred"
             onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57"
@@ -79,7 +86,7 @@
             size="20"
             min = "0"
           />
-          Number of $2 bills?
+          Number of $2 bills or coins (total)?
           <br />
           <input 
             id="one"

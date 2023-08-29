@@ -375,4 +375,40 @@ function harper() {
       }
     }
   }
+
+  const countdownObject = {"revenue": {}, "tips": {}}
+
+  const pullArrayKeys = [
+    "pullHundred",
+    "pullFifty",
+    "pullTwenty",
+    "pullTen",
+    "pullFive",
+    "pullTwo",
+    "pullOne",
+    "pullQuarters",
+    "pullDimes",
+    "pullNickels",
+    "pullPennies",
+  ];
+
+
+  for (let i = 0; i < pullArrayKeys.length; i++) {
+    countdownObject["revenue"][pullArrayKeys[i]] = pullArray[i];
+  }
+
+
+  const copyObject = info.elements["copyObject"].checked
+  if (copyObject) {
+    navigator.clipboard.writeText(JSON.stringify(countdownObject))
+    write("<br>")
+    write("Copied to Clipboard!")
+    // write("Copy and Paste the following object in the google form <br><br>")
+    // write(JSON.stringify(countdownObject))
+  }
+
+
 }
+
+
+// {"pullHundred":8,"pullFifty":8,"pullTwenty":4,"pullTen":0,"pullFive":1,"pullTwo":0,"pullOne":1,"pullQuarters":0,"pullDimes":0,"pullNickels":0,"pullPennies":0}
