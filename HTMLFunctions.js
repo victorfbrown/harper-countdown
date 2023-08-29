@@ -3,7 +3,9 @@ function write(input) {
 }
 
 function clearInputs() {
+  previousCopy = document.getElementById("form1").elements["copyObject"].checked;
   document.getElementById("form1").reset();
+  document.getElementById("form1").elements["copyObject"].checked = previousCopy
   const button = document.querySelector("button");
   button.disabled = true;
 }
@@ -259,15 +261,6 @@ function harper() {
   write("<br>");
   write("<br>");
 
-  if (desired != track_desired) {
-    write(
-      "It is impossible for you to get the right combination! \
-      Please check your inputs and make sure they're all correct, I'm not even sure \
-      if this is mathematically possible, I haven't thought about it too hard. \
-       -Victor <br>"
-    );
-  }
-
   const pullArray = [
     pullHundred,
     pullFifty,
@@ -282,10 +275,34 @@ function harper() {
     pullPennies,
   ];
 
-  if (desired > 0) {
-    write("Pull out the following:");
-    write("<br>");
+  if (desired == 0) {
+    write(
+      "There is exactly $250 in the register. This is incredibly unlikely, please text or email me if you've double checked the fields and this is is still the case<br>"
+    );
+    write("-Victor");
+    return;
+  } else if (desired < 0) {
+    write(
+      "There is less than $250 in the register. This is borderline impossible, please text or email me if you've double checked the fields and this is is still the case<br>"
+    );
+    write("-Victor");
+    return
   }
+
+
+  if (desired != track_desired) {
+    write(
+      "It is either impossible for you to get the right combination or one of the fields is empty! \
+      Please check the fields and make sure they're all filled in, it's mathematically possible for there\
+      to be no combination of money to remove, but the odds are super low. \
+      Shoot me a text or email if you can't figure out any problems!<br> \
+       -Victor <br>"
+    );
+    return
+  }
+
+  write("Pull out the following:");
+  write("<br>");
 
   for (let i = 0; i < 11; i++) {
     if (pullArray[i] != 0) {
@@ -376,7 +393,7 @@ function harper() {
     }
   }
 
-  const countdownObject = {"revenue": {}, "tips": {}}
+  const countdownObject = { revenue: {}, tips: {} };
 
   const pullArrayKeys = [
     "pullHundred",
@@ -392,23 +409,18 @@ function harper() {
     "pullPennies",
   ];
 
-
   for (let i = 0; i < pullArrayKeys.length; i++) {
     countdownObject["revenue"][pullArrayKeys[i]] = pullArray[i];
   }
 
-
-  const copyObject = info.elements["copyObject"].checked
+  const copyObject = info.elements["copyObject"].checked;
   if (copyObject) {
-    navigator.clipboard.writeText(JSON.stringify(countdownObject))
-    write("<br>")
-    write("Copied to Clipboard!")
+    navigator.clipboard.writeText(JSON.stringify(countdownObject));
+    write("<br>");
+    write("Copied to Clipboard!");
     // write("Copy and Paste the following object in the google form <br><br>")
     // write(JSON.stringify(countdownObject))
   }
-
-
 }
-
 
 // {"pullHundred":8,"pullFifty":8,"pullTwenty":4,"pullTen":0,"pullFive":1,"pullTwo":0,"pullOne":1,"pullQuarters":0,"pullDimes":0,"pullNickels":0,"pullPennies":0}
