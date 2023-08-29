@@ -5,7 +5,7 @@ function write(input) {
 function clearInputs() {
   previousCopy = document.getElementById("form1").elements["copyObject"].checked;
   document.getElementById("form1").reset();
-  document.getElementById("form1").elements["copyObject"].checked = previousCopy
+  document.getElementById("form1").elements["copyObject"].checked = previousCopy;
   const button = document.querySelector("button");
   button.disabled = true;
 }
