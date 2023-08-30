@@ -3,9 +3,11 @@ function write(input) {
 }
 
 function clearInputs() {
-  previousCopy = document.getElementById("form1").elements["copyObject"].checked;
+  previousCopy =
+    document.getElementById("form1").elements["copyObject"].checked;
   document.getElementById("form1").reset();
-  document.getElementById("form1").elements["copyObject"].checked = previousCopy;
+  document.getElementById("form1").elements["copyObject"].checked =
+    previousCopy;
   const button = document.querySelector("button");
   button.disabled = true;
 }
@@ -23,31 +25,28 @@ function clearHTML() {
 }
 
 function addEventListeners() {
-  const hundred = document.getElementById("hundred");
-  hundred.addEventListener("input", enableButton);
-  const fifty = document.getElementById("fifty");
-  fifty.addEventListener("input", enableButton);
-  const twenty = document.getElementById("twenty");
-  twenty.addEventListener("input", enableButton);
-  const ten = document.getElementById("ten");
-  ten.addEventListener("input", enableButton);
-  const five = document.getElementById("five");
-  five.addEventListener("input", enableButton);
-  const two = document.getElementById("two");
-  two.addEventListener("input", enableButton);
-  const one = document.getElementById("one");
-  one.addEventListener("input", enableButton);
-  const quarter = document.getElementById("quarter");
-  quarter.addEventListener("input", enableButton);
-  const dime = document.getElementById("dime");
-  dime.addEventListener("input", enableButton);
-  const nickel = document.getElementById("nickel");
-  nickel.addEventListener("input", enableButton);
-  const penny = document.getElementById("penny");
-  penny.addEventListener("input", enableButton);
+  const relevantStrings = [
+    "hundred",
+    "fifty",
+    "twenty",
+    "ten",
+    "five",
+    "two",
+    "one",
+    "quarter",
+    "dime",
+    "nickel",
+    "penny",
+  ];
+
+  for (let i = 0; i < relevantStrings.length; i++) {
+    document
+      .getElementById(relevantStrings[i])
+      .addEventListener("input", enableButton);
+  }
 }
 
-function enableButton() {
+function getRevenueInputInformation() {
   const info = document.getElementById("form1");
   const numHundred = parseInt(info.elements["numHundred"].value);
   const numFifty = parseInt(info.elements["numFifty"].value);
@@ -56,18 +55,18 @@ function enableButton() {
   const numFive = parseInt(info.elements["numFive"].value);
   const numTwo = parseInt(info.elements["numTwo"].value);
   const numOne = parseInt(info.elements["numOne"].value);
-  const numQuarters = (
-    parseFloat(info.elements["valQuarters"].value) / 0.25
-  ).toFixed(0);
-  const numDimes = (parseFloat(info.elements["valDimes"].value) / 0.1).toFixed(
-    0
+  const numQuarters = parseInt(
+    (parseFloat(info.elements["valQuarters"].value) / 0.25).toFixed(0)
   );
-  const numNickels = (
-    parseFloat(info.elements["valNickels"].value) / 0.05
-  ).toFixed(0);
-  const numPennies = (
-    parseFloat(info.elements["valPennies"].value) / 0.01
-  ).toFixed(0);
+  const numDimes = parseInt(
+    (parseFloat(info.elements["valDimes"].value) / 0.1).toFixed(0)
+  );
+  const numNickels = parseInt(
+    (parseFloat(info.elements["valNickels"].value) / 0.05).toFixed(0)
+  );
+  const numPennies = parseInt(
+    (parseFloat(info.elements["valPennies"].value) / 0.01).toFixed(0)
+  );
 
   const inputArray = [
     numHundred,
@@ -83,17 +82,23 @@ function enableButton() {
     numPennies,
   ];
 
-  let allValid = true;
-  for (item in inputArray) {
-    if (isNaN(inputArray[item])) {
-      allValid = false;
+  return inputArray;
+}
+
+function getTipInputInformation() {
+  // TODO
+  return;
+}
+
+function enableButton() {
+  const revenueInputArray = getRevenueInputInformation();
+  for (item in revenueInputArray) {
+    if (isNaN(revenueInputArray[item])) {
+      return;
     }
   }
-
-  if (allValid == true) {
-    const button = document.querySelector("button");
-    button.disabled = false;
-  }
+  const button = document.querySelector("button");
+  button.disabled = false;
 }
 
 var validate = function (e) {
@@ -134,146 +139,39 @@ function toggleTheme() {
 addEventListeners();
 
 function harper() {
-  document.getElementById("demo").innerHTML = "";
-  const info = document.getElementById("form1");
-  const numHundred = parseInt(info.elements["numHundred"].value);
-  const numFifty = parseInt(info.elements["numFifty"].value);
-  const numTwenty = parseInt(info.elements["numTwenty"].value);
-  const numTen = parseInt(info.elements["numTen"].value);
-  const numFive = parseInt(info.elements["numFive"].value);
-  const numTwo = parseInt(info.elements["numTwo"].value);
-  const numOne = parseInt(info.elements["numOne"].value);
-  const numQuarters = (
-    parseFloat(info.elements["valQuarters"].value) / 0.25
-  ).toFixed(0);
-  const numDimes = (parseFloat(info.elements["valDimes"].value) / 0.1).toFixed(
-    0
-  );
-  const numNickels = (
-    parseFloat(info.elements["valNickels"].value) / 0.05
-  ).toFixed(0);
-  const numPennies = (
-    parseFloat(info.elements["valPennies"].value) / 0.01
-  ).toFixed(0);
-  let pullHundred = 0;
-  let pullFifty = 0;
-  let pullTwenty = 0;
-  let pullTen = 0;
-  let pullFive = 0;
-  let pullTwo = 0;
-  let pullOne = 0;
-  let pullQuarters = 0;
-  let pullDimes = 0;
-  let pullNickels = 0;
-  let pullPennies = 0;
-  let total = (
-    numHundred * 100 +
-    numFifty * 50 +
-    numTwenty * 20 +
-    numTen * 10 +
-    numFive * 5 +
-    numTwo * 2 +
-    numOne +
-    numQuarters * 0.25 +
-    numDimes * 0.1 +
-    numNickels * 0.05 +
-    numPennies * 0.01
-  ).toFixed(2);
+  clearHTML();
+  const pullArray = new Array(11).fill(0);
+
+  const multiplierArray = [100, 50, 20, 10, 5, 2, 1, 0.25, 0.1, 0.05, 0.01];
+  const revenueInputArray = getRevenueInputInformation();
+  let total = 0;
+  for (let i = 0; i < multiplierArray.length; i++) {
+    total += revenueInputArray[i] * multiplierArray[i];
+  }
+
+  total = parseFloat(total.toFixed(2));
 
   let desired = total - 250;
   let track_desired = 0;
 
-  for (let i = 0; i < numHundred; i++) {
-    if ((desired - track_desired).toFixed(2) >= 100) {
-      pullHundred += 1;
-      track_desired += 100;
-    }
-  }
-  for (let i = 0; i < numFifty; i++) {
-    if ((desired - track_desired).toFixed(2) >= 50) {
-      pullFifty += 1;
-      track_desired += 50;
-    }
-  }
-  for (let i = 0; i < numTwenty; i++) {
-    if ((desired - track_desired).toFixed(2) >= 20) {
-      pullTwenty += 1;
-      track_desired += 20;
-    }
-  }
-  for (let i = 0; i < numTen; i++) {
-    if ((desired - track_desired).toFixed(2) >= 10) {
-      pullTen += 1;
-      track_desired += 10;
-    }
-  }
-  for (let i = 0; i < numFive; i++) {
-    if ((desired - track_desired).toFixed(2) >= 5) {
-      pullFive += 1;
-      track_desired += 5;
-    }
-  }
-  for (let i = 0; i < numTwo; i++) {
-    if ((desired - track_desired).toFixed(2) >= 2) {
-      pullTwo += 1;
-      track_desired += 2;
-    }
-  }
-  for (let i = 0; i < numOne; i++) {
-    if ((desired - track_desired).toFixed(2) >= 1) {
-      pullOne += 1;
-      track_desired += 1;
-    }
-  }
-  for (let i = 0; i < numQuarters; i++) {
-    if ((desired - track_desired).toFixed(2) >= 0.25) {
-      pullQuarters += 1;
-      track_desired += 0.25;
-    }
-  }
-  for (let i = 0; i < numDimes; i++) {
-    if ((desired - track_desired).toFixed(2) >= 0.1) {
-      pullDimes += 1;
-      track_desired += 0.1;
+  for (let i = 0; i < revenueInputArray.length; i++) {
+    let currencyAmount = revenueInputArray[i];
+    let currencyValue = multiplierArray[i];
+    for (let j = 0; j < currencyAmount; j++) {
+      if ((desired - track_desired).toFixed(2) >= currencyValue) {
+        pullArray[i] += 1;
+        track_desired += currencyValue;
+      }
     }
   }
 
-  for (let i = 0; i < numNickels; i++) {
-    if ((desired - track_desired).toFixed(2) >= 0.05) {
-      pullNickels += 1;
-      track_desired += 0.05;
-    }
-  }
-  for (let i = 0; i < numPennies; i++) {
-    if ((desired - track_desired).toFixed(2) >= 0.01) {
-      pullPennies += 1;
-      track_desired += 0.01;
-    }
-  }
-  track_desired = track_desired.toFixed(2);
-  desired = desired.toFixed(2);
-  write("<br>");
-  write("Total: ");
+  track_desired = parseFloat(track_desired.toFixed(2));
+  desired = parseFloat(desired.toFixed(2));
+  write("<br>Total: ");
   write(total);
-  write("<br>");
-  write("Desired: ");
+  write("<br>Desired: ");
   write(desired);
-  write("<br>");
-  write("<br>");
-
-  const pullArray = [
-    pullHundred,
-    pullFifty,
-    pullTwenty,
-    pullTen,
-    pullFive,
-    pullTwo,
-    pullOne,
-    pullQuarters,
-    pullDimes,
-    pullNickels,
-    pullPennies,
-  ];
+  write("<br><br>");
 
   if (desired == 0) {
     write(
@@ -286,11 +184,8 @@ function harper() {
       "There is less than $250 in the register. This is borderline impossible, please text or email me if you've double checked the fields and this is is still the case<br>"
     );
     write("-Victor");
-    return
-  }
-
-
-  if (desired != track_desired) {
+    return;
+  } else if (desired != track_desired) {
     write(
       "It is either impossible for you to get the right combination or one of the fields is empty! \
       Please check the fields and make sure they're all filled in, it's mathematically possible for there\
@@ -298,11 +193,25 @@ function harper() {
       Shoot me a text or email if you can't figure out any problems!<br> \
        -Victor <br>"
     );
-    return
+    return;
   }
 
   write("Pull out the following:");
   write("<br>");
+
+  const pullArrayStrings = [
+    " $100 bill",
+    " $50 bill",
+    " $20 bill",
+    " $10 bill",
+    " $5 bill",
+    " $2 bills or coins @@@@",
+    " $1 bills or coins @@@@",
+    " quarter",
+    " dime",
+    " nickel",
+    " penny @@@@@@",
+  ];
 
   for (let i = 0; i < 11; i++) {
     if (pullArray[i] != 0) {
@@ -418,9 +327,5 @@ function harper() {
     navigator.clipboard.writeText(JSON.stringify(countdownObject));
     write("<br>");
     write("Copied to Clipboard!");
-    // write("Copy and Paste the following object in the google form <br><br>")
-    // write(JSON.stringify(countdownObject))
   }
 }
-
-// {"pullHundred":8,"pullFifty":8,"pullTwenty":4,"pullTen":0,"pullFive":1,"pullTwo":0,"pullOne":1,"pullQuarters":0,"pullDimes":0,"pullNickels":0,"pullPennies":0}
