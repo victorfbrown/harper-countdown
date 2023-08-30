@@ -136,174 +136,8 @@ function toggleTheme() {
   }
 }
 
-addEventListeners();
-
-function harper() {
-  clearHTML();
-  const pullArray = new Array(11).fill(0);
-
-  const multiplierArray = [100, 50, 20, 10, 5, 2, 1, 0.25, 0.1, 0.05, 0.01];
-  const revenueInputArray = getRevenueInputInformation();
-  let total = 0;
-  for (let i = 0; i < multiplierArray.length; i++) {
-    total += revenueInputArray[i] * multiplierArray[i];
-  }
-
-  total = parseFloat(total.toFixed(2));
-
-  let desired = total - 250;
-  let track_desired = 0;
-
-  for (let i = 0; i < revenueInputArray.length; i++) {
-    let currencyAmount = revenueInputArray[i];
-    let currencyValue = multiplierArray[i];
-    for (let j = 0; j < currencyAmount; j++) {
-      if ((desired - track_desired).toFixed(2) >= currencyValue) {
-        pullArray[i] += 1;
-        track_desired += currencyValue;
-      }
-    }
-  }
-
-  track_desired = parseFloat(track_desired.toFixed(2));
-  desired = parseFloat(desired.toFixed(2));
-  write("<br>Total: ");
-  write(total);
-  write("<br>Desired: ");
-  write(desired);
-  write("<br><br>");
-
-  if (desired == 0) {
-    write(
-      "There is exactly $250 in the register. This is incredibly unlikely, please text or email me if you've double checked the fields and this is is still the case<br>"
-    );
-    write("-Victor");
-    return;
-  } else if (desired < 0) {
-    write(
-      "There is less than $250 in the register. This is borderline impossible, please text or email me if you've double checked the fields and this is is still the case<br>"
-    );
-    write("-Victor");
-    return;
-  } else if (desired != track_desired) {
-    write(
-      "It is either impossible for you to get the right combination or one of the fields is empty! \
-      Please check the fields and make sure they're all filled in, it's mathematically possible for there\
-      to be no combination of money to remove, but the odds are super low. \
-      Shoot me a text or email if you can't figure out any problems!<br> \
-       -Victor <br>"
-    );
-    return;
-  }
-
-  write("Pull out the following:");
-  write("<br>");
-
-  const pullArrayStrings = [
-    " $100 bill",
-    " $50 bill",
-    " $20 bill",
-    " $10 bill",
-    " $5 bill",
-    " $2 bills or coins @@@@",
-    " $1 bills or coins @@@@",
-    " quarter",
-    " dime",
-    " nickel",
-    " penny @@@@@@",
-  ];
-
-  for (let i = 0; i < 11; i++) {
-    if (pullArray[i] != 0) {
-      if (i == 0) {
-        write(pullArray[i]);
-        if (pullArray[i] == 1) {
-          write(" $100 bill<br>");
-        } else {
-          write(" $100 bills<br>");
-        }
-      }
-      if (i == 1) {
-        write(pullArray[i]);
-        if (pullArray[i] == 1) {
-          write(" $50 bill<br>");
-        } else {
-          write(" $50 bills<br>");
-        }
-      }
-      if (i == 2) {
-        write(pullArray[i]);
-        if (pullArray[i] == 1) {
-          write(" $20 bill<br>");
-        } else {
-          write(" $20 bills<br>");
-        }
-      }
-      if (i == 3) {
-        write(pullArray[i]);
-        write(" $10 bills<br>");
-      }
-      if (i == 4) {
-        write(pullArray[i]);
-        if (pullArray[i] == 1) {
-          write(" $5 bill<br>");
-        } else {
-          write(" $5 bills<br>");
-        }
-      }
-      if (i == 5) {
-        write(pullArray[i]);
-        if (pullArray[i] == 1) {
-          write(" $2 bill<br>");
-        } else {
-          write(" $2 bills<br>");
-        }
-      }
-      if (i == 6) {
-        write(pullArray[i]);
-        if (pullArray[i] == 1) {
-          write(" $1 bill or $1 coin<br>");
-        } else {
-          write(" $1 bills or $1 coins<br>");
-        }
-      }
-      if (i == 7) {
-        write(pullArray[i]);
-        if (pullArray[i] == 1) {
-          write(" quarter<br>");
-        } else {
-          write(" quarters<br>");
-        }
-      }
-      if (i == 8) {
-        write(pullArray[i]);
-        if (pullArray[i] == 1) {
-          write(" dime<br>");
-        } else {
-          write(" dimes<br>");
-        }
-      }
-      if (i == 9) {
-        write(pullArray[i]);
-        if (pullArray[i] == 1) {
-          write(" nickel<br>");
-        } else {
-          write(" nickels<br>");
-        }
-      }
-      if (i == 10) {
-        write(pullArray[i]);
-        if (pullArray[i] == 1) {
-          write(" penny<br>");
-        } else {
-          write(" pennies<br>");
-        }
-      }
-    }
-  }
-
+function createAndCopyObject(pullArray) {
   const countdownObject = { revenue: {}, tips: {} };
-
   const pullArrayKeys = [
     "pullHundred",
     "pullFifty",
@@ -322,10 +156,137 @@ function harper() {
     countdownObject["revenue"][pullArrayKeys[i]] = pullArray[i];
   }
 
-  const copyObject = info.elements["copyObject"].checked;
+  //TIPS GOES HERE!!!
+
+  const copyObject =
+    document.getElementById("form1").elements["copyObject"].checked;
   if (copyObject) {
     navigator.clipboard.writeText(JSON.stringify(countdownObject));
     write("<br>");
     write("Copied to Clipboard!");
   }
+}
+
+function writePullAmount(pullArray) {
+  write("Pull out the following:");
+  write("<br>");
+  const pullArrayStrings = [
+    " $100 bill",
+    " $50 bill",
+    " $20 bill",
+    " $10 bill",
+    " $5 bill",
+    " $2 bill or coin",
+    " $1 bill or coin",
+    " quarter",
+    " dime",
+    " nickel",
+    " penny",
+  ];
+  for (let i = 0; i < pullArray.length; i++) {
+    let currencyAmount = pullArray[i];
+
+    if (currencyAmount == 0) {
+      continue;
+    }
+
+    let currencyString = "";
+    let standardEnglish = false;
+    if (i == 5 && currencyAmount > 1) {
+      currencyString = " $2 bills or coins ";
+    } else if (i == 6 && currencyAmount > 1) {
+      currencyString = " $1 bills or coins ";
+    } else if (i == 10 && currencyAmount > 1) {
+      currencyString = " pennies";
+    } else {
+      currencyString = pullArrayStrings[i];
+      standardEnglish = true;
+    }
+
+    write(currencyAmount);
+    write(" ");
+    write(currencyString);
+
+    if (currencyAmount > 1 && standardEnglish) {
+      write("s");
+    }
+
+    write("<br>");
+  }
+}
+
+function errorCheck(desired, trackDesired) {
+  let error = true;
+  if (desired == 0) {
+    write(
+      "There is exactly $250 in the register. This is incredibly unlikely, please text or email me if you've double checked the fields and this is is still the case<br>"
+    );
+    write("-Victor");
+  } else if (desired < 0) {
+    write(
+      "There is less than $250 in the register. This is borderline impossible, please text or email me if you've double checked the fields and this is is still the case<br>"
+    );
+    write("-Victor");
+  } else if (desired != trackDesired) {
+    write(
+      "It is either impossible for you to get the right combination or one of the fields is empty! \
+      Please check the fields and make sure they're all filled in, it's mathematically possible for there\
+      to be no combination of money to remove, but the odds are super low. \
+      Shoot me a text or email if you can't figure out any problems!<br> \
+       -Victor <br>"
+    );
+  } else {
+    error = false;
+  }
+  return error;
+}
+
+function getTotal(revenueInputArray, multiplierArray) {
+  let total = 0;
+  for (let i = 0; i < multiplierArray.length; i++) {
+    total += revenueInputArray[i] * multiplierArray[i];
+  }
+  total = parseFloat(total.toFixed(2));
+  return total;
+}
+
+addEventListeners();
+
+function harper() {
+  clearHTML();
+  const revenueInputArray = getRevenueInputInformation();
+  const pullArray = new Array(11).fill(0);
+  const multiplierArray = [100, 50, 20, 10, 5, 2, 1, 0.25, 0.1, 0.05, 0.01];
+
+  let total = getTotal(revenueInputArray, multiplierArray);
+  let desired = total - 250;
+  let trackDesired = 0;
+
+  for (let i = 0; i < revenueInputArray.length; i++) {
+    let currencyAmount = revenueInputArray[i];
+    let currencyValue = multiplierArray[i];
+    for (let j = 0; j < currencyAmount; j++) {
+      if ((desired - trackDesired).toFixed(2) >= currencyValue) {
+        pullArray[i] += 1;
+        trackDesired += currencyValue;
+      }
+    }
+  }
+
+  trackDesired = parseFloat(trackDesired.toFixed(2));
+  desired = parseFloat(desired.toFixed(2));
+
+  write("<br>Total: ");
+  write(total);
+  write("<br>Desired: ");
+  write(desired);
+  write("<br><br>");
+
+  let errorExists = errorCheck(desired, trackDesired);
+  if (errorExists) {
+    return;
+  }
+
+  writePullAmount(pullArray);
+  createAndCopyObject(pullArray);
 }
