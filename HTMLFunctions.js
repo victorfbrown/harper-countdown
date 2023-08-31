@@ -2,19 +2,21 @@ function write(input) {
   document.getElementById("demo").innerHTML += input;
 }
 
-function clearInputs() {
+function clearInputs(reset) {
   previousCopy =
     document.getElementById("form1").elements["copyObject"].checked;
   document.getElementById("form1").reset();
-  document.getElementById("form1").elements["copyObject"].checked =
-    previousCopy;
+  if (!reset) {
+    document.getElementById("form1").elements["copyObject"].checked =
+      previousCopy;
+  }
   const button = document.querySelector("button");
   button.disabled = true;
 }
 
 function reset() {
   clearHTML();
-  clearInputs();
+  clearInputs(true);
   enableButton();
   var theme = document.getElementsByTagName("link")[0];
   theme.setAttribute("href", "memphis.css");
