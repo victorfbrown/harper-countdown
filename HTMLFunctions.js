@@ -41,6 +41,31 @@ function addEventListeners() {
     "penny",
   ];
 
+  // const relevantStrings = [
+  //   "hundred",
+  //   "fifty",
+  //   "twenty",
+  //   "ten",
+  //   "five",
+  //   "two",
+  //   "one",
+  //   "quarter",
+  //   "dime",
+  //   "nickel",
+  //   "penny",
+  //   "hundredTips",
+  //   "fiftyTips",
+  //   "twentyTips",
+  //   "tenTips",
+  //   "fiveTips",
+  //   "twoTips",
+  //   "oneTips",
+  //   "quarterTips",
+  //   "dimeTips",
+  //   "nickelTips",
+  //   "pennyTips",
+  // ];
+
   for (let i = 0; i < relevantStrings.length; i++) {
     document
       .getElementById(relevantStrings[i])
@@ -48,57 +73,75 @@ function addEventListeners() {
   }
 }
 
-function getRevenueInputInformation() {
+function getInputInformation() {
   const info = document.getElementById("form1");
-  const numHundred = parseInt(info.elements["numHundred"].value);
-  const numFifty = parseInt(info.elements["numFifty"].value);
-  const numTwenty = parseInt(info.elements["numTwenty"].value);
-  const numTen = parseInt(info.elements["numTen"].value);
-  const numFive = parseInt(info.elements["numFive"].value);
-  const numTwo = parseInt(info.elements["numTwo"].value);
-  const numOne = parseInt(info.elements["numOne"].value);
-  const numQuarters = parseInt(
-    (parseFloat(info.elements["valQuarters"].value) / 0.25).toFixed(0)
-  );
-  const numDimes = parseInt(
-    (parseFloat(info.elements["valDimes"].value) / 0.1).toFixed(0)
-  );
-  const numNickels = parseInt(
-    (parseFloat(info.elements["valNickels"].value) / 0.05).toFixed(0)
-  );
-  const numPennies = parseInt(
-    (parseFloat(info.elements["valPennies"].value) / 0.01).toFixed(0)
-  );
+  const revenueInputArray = [];
+  // const tipInputArray = [];
 
-  const inputArray = [
-    numHundred,
-    numFifty,
-    numTwenty,
-    numTen,
-    numFive,
-    numTwo,
-    numOne,
-    numQuarters,
-    numDimes,
-    numNickels,
-    numPennies,
+  const inputBillStrings = [
+    "numHundred",
+    "numFifty",
+    "numTwenty",
+    "numTen",
+    "numFive",
+    "numTwo",
+    "numOne",
   ];
 
-  return inputArray;
-}
+  const inputCoinStrings = [
+    "valQuarters",
+    "valDimes",
+    "valNickels",
+    "valPennies",
+  ];
 
-function getTipInputInformation() {
-  // TODO
-  return;
+  const coinValues = [0.25, 0.1, 0.05, 0.01];
+
+  for (let i = 0; i < inputBillStrings.length; i++) {
+    let revenueName = inputBillStrings[i];
+    let revenueValue = parseInt(info.elements[revenueName].value);
+    revenueInputArray.push(revenueValue);
+
+    // let tipName = revenueName + "Tips";
+    // let tipValue = parseInt(info.elements[tipName].value);
+    // tipInputArray.push(tipValue);
+  }
+
+  for (let i = 0; i < inputCoinStrings.length; i++) {
+    let coinValue = coinValues[i];
+    let revenueName = inputCoinStrings[i];
+    let revenueValue = parseInt(
+      (parseFloat(info.elements[revenueName].value) / coinValue).toFixed(0)
+    );
+    revenueInputArray.push(revenueValue);
+
+    // let tipName = revenueName + "Tips";
+    // let tipValue = parseInt(
+    //   (parseFloat(info.elements[tipName].value) / coinValue).toFixed(0)
+    // );
+    // tipInputArray.push(tipValue);
+  }
+
+  tipInputArray = new Array(11).fill(0);
+  revenueAndTip = [revenueInputArray, tipInputArray];
+
+  return [revenueInputArray, tipInputArray];
 }
 
 function enableButton() {
-  const revenueInputArray = getRevenueInputInformation();
+  const revenueInputArray = getInputInformation()[0];
+  const tipInputArray = getInputInformation()[1];
   for (item in revenueInputArray) {
     if (isNaN(revenueInputArray[item])) {
       return;
     }
   }
+  for (item in tipInputArray) {
+    if (isNaN(tipInputArray[item])) {
+      return;
+    }
+  }
+
   const button = document.querySelector("button");
   button.disabled = false;
 }
@@ -138,7 +181,7 @@ function toggleTheme() {
   }
 }
 
-function createAndCopyObject(pullArray) {
+function createAndCopyObject(pullArray, tipArray) {
   const countdownObject = { revenue: {}, tips: {} };
   const pullArrayKeys = [
     "pullHundred",
@@ -156,9 +199,8 @@ function createAndCopyObject(pullArray) {
 
   for (let i = 0; i < pullArrayKeys.length; i++) {
     countdownObject["revenue"][pullArrayKeys[i]] = pullArray[i];
+    countdownObject["tips"][pullArrayKeys[i]] = tipArray[i];
   }
-
-  //TIPS GOES HERE!!!
 
   const copyObject =
     document.getElementById("form1").elements["copyObject"].checked;
@@ -256,7 +298,8 @@ addEventListeners();
 
 function harper() {
   clearHTML();
-  const revenueInputArray = getRevenueInputInformation();
+  const revenueInputArray = getInputInformation()[0];
+  const tipInputArray = getInputInformation()[1];
   const pullArray = new Array(11).fill(0);
   const multiplierArray = [100, 50, 20, 10, 5, 2, 1, 0.25, 0.1, 0.05, 0.01];
 
@@ -290,5 +333,7 @@ function harper() {
   }
 
   writePullAmount(pullArray);
-  createAndCopyObject(pullArray);
+  write("<br>For Tips <br>");
+  writePullAmount(tipInputArray);
+  createAndCopyObject(pullArray, tipInputArray);
 }
