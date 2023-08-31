@@ -6,151 +6,142 @@
     <meta name="viewport" content="device-width, initial-scale=1" />
     <title>Harper Cafe</title>
   </head>
-    <h1> Harper Cafe Payment Helper</h1>
-      <div class = "cropped">
-        <img src = "harperlogo.png" width = "153" height = "198.5">
-      </div>
-      <div>
-        <h2> Made by Victor Brown</h2>
-        <h4> Styled by Memphis Cutchlow & Madeline Busse</h4>
-      </div>
-    </div>      
-      <div class = "normal">
-        <img src="harper.JPG" width="450" height="300" />
-      </div>
-      <div>
-        <br />
+  <h1>Harper Cafe Payment Helper</h1>
+  <div class="cropped">
+    <img src="harperlogo.png" width="153" height="198.5" />
+  </div>
+  <div>
+    <h2>Made by Victor Brown</h2>
+    <h4>Styled by Memphis Cutchlow & Madeline Busse</h4>
+  </div>
+  <div class="normal">
+    <img src="harper.JPG" width="450" height="300" />
+  </div>
+  <div>
+    <br />
 
+    <form id="form1">
+      <input
+        type="checkbox"
+        id="object"
+        name="copyObject"
+        value="object"
+        checked="checked"
+      />
+      <label for="object">Copy Object?</label><br />
 
-        <form id="form1">
-          
-          <input type="checkbox" id="object" name="copyObject" value="object" checked="checked">
-          <label for="object">Copy Object?</label><br>
-
-
-          <input
-            id="hundred"
-            onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57"
-            name="numHundred"
-            type="number"
-            size="20"
-            min = "0"
-          />
-          Number of $100 bills?
-          <br />
-          <input 
-            id="fifty"
-            onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57"
-            name="numFifty"
-            type="number"
-            size="20"
-            min = "0"
-          />
-          Number of $50 bills?
-          <br />
-          <input 
-            id="twenty"
-            onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57"
-            name="numTwenty"
-            type="number"
-            size="20"
-            min = "0"
-          />
-          Number of $20 bills?
-          <br />
-          <input 
-            id="ten"
-            onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57"
-            name="numTen"
-            type="number"
-            size="20"
-            min = "0"
-          />
-          Number of $10 bills?
-          <br />
-          <input  
-            id="five"
-            onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57"
-            name="numFive"
-            type="number"
-            size="20"
-            min = "0"
-          />
-          Number of $5 bills?
-          <br />
-          <input  
-            id="two"
-            onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57"
-            name="numTwo"
-            type="number"
-            size="20"
-            min = "0"
-          />
-          Number of $2 bills or coins (total)?
-          <br />
-          <input 
-            id="one"
-            onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57"
-            name="numOne"
-            type="number"
-            size="20"
-            min = "0"
-          />
-          Number of $1 bills or coins (total)?
-          <br />
-          <input  
-            id="quarter"
-            name="valQuarters"
-            type="text"
-            size="20"
-            oninput = "validate(this)"
-          />
-          Value of Quarters?
-          <br />
-          <input  
-            id="dime"
-            name="valDimes"
-            type="text"
-            size="20"
-            oninput = "validate(this)"
-          />
-          Value of Dimes?
-          <br />
-          <input  
-            id="nickel"
-            name="valNickels"
-            type="text"
-            size="20"
-            oninput = "validate(this)"
-          />
-          Value of Nickels?
-          <br />
-          <input 
-            id ="penny"
-            name="valPennies"
-            type="text"
-            size="20"
-            oninput = "validate(this)"
-          />
-          Value of Pennies?
-        </form>
-        <br />
-        <button onclick="harper()" disabled>
-          Submit
-        </button>
-        <button
-          onclick="clearInputs(false)"
-        >
-          Clear Inputs
-        </button>
-        <button onclick="reset()">
-          Reset
-        </button>
-        <button onclick="toggleTheme()">Switch Style</button>
-
-      </div>
-    </div>
-    <script src="HTMLFunctions.js"></script>
-    <p id="demo"></p>
-  </body>
+      <input
+        id="hundred"
+        onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57"
+        name="numHundred"
+        type="number"
+        size="20"
+        min="0"
+      />
+      Number of $100 bills?
+      <br />
+      <input
+        id="fifty"
+        onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57"
+        name="numFifty"
+        type="number"
+        size="20"
+        min="0"
+      />
+      Number of $50 bills?
+      <br />
+      <input
+        id="twenty"
+        onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57"
+        name="numTwenty"
+        type="number"
+        size="20"
+        min="0"
+      />
+      Number of $20 bills?
+      <br />
+      <input
+        id="ten"
+        onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57"
+        name="numTen"
+        type="number"
+        size="20"
+        min="0"
+      />
+      Number of $10 bills?
+      <br />
+      <input
+        id="five"
+        onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57"
+        name="numFive"
+        type="number"
+        size="20"
+        min="0"
+      />
+      Number of $5 bills?
+      <br />
+      <input
+        id="two"
+        onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57"
+        name="numTwo"
+        type="number"
+        size="20"
+        min="0"
+      />
+      Number of $2 bills or coins (total)?
+      <br />
+      <input
+        id="one"
+        onkeypress="return event.keyCode === 8 || event.charCode >= 48 && event.charCode <= 57"
+        name="numOne"
+        type="number"
+        size="20"
+        min="0"
+      />
+      Number of $1 bills or coins (total)?
+      <br />
+      <input
+        id="quarter"
+        name="valQuarters"
+        type="text"
+        size="20"
+        oninput="validate(this)"
+      />
+      Value of Quarters?
+      <br />
+      <input
+        id="dime"
+        name="valDimes"
+        type="text"
+        size="20"
+        oninput="validate(this)"
+      />
+      Value of Dimes?
+      <br />
+      <input
+        id="nickel"
+        name="valNickels"
+        type="text"
+        size="20"
+        oninput="validate(this)"
+      />
+      Value of Nickels?
+      <br />
+      <input
+        id="penny"
+        name="valPennies"
+        type="text"
+        size="20"
+        oninput="validate(this)"
+      />
+      Value of Pennies?
+    </form>
+    <br />
+    <button onclick="harper()" disabled>Submit</button>
+    <button onclick="clearInputs(false)">Clear Inputs</button>
+    <button onclick="reset()">Reset</button>
+    <button onclick="toggleTheme()">Switch Style</button>
+  </div>
+  <script src="HTMLFunctions.js"></script>
+  <p id="demo"></p>
 </html>
