@@ -206,13 +206,16 @@ function createAndCopyObject(pullArray, tipArray) {
     document.getElementById("form1").elements["copyObject"].checked;
   if (copyObject) {
     navigator.clipboard.writeText(JSON.stringify(countdownObject));
-    write("<br>");
     write("Copied to Clipboard!");
   }
 }
 
-function writePullAmount(pullArray) {
-  write("Pull out the following:");
+function writePullAmount(pullArray, isTip) {
+  if (isTip) {
+    write("Put the following in the tip envelope:");
+  } else {
+    write("Pull out the following:");
+  }
   write("<br>");
   const pullArrayStrings = [
     " $100 bill",
@@ -320,11 +323,14 @@ function harper() {
 
   trackDesired = parseFloat(trackDesired.toFixed(2));
   desired = parseFloat(desired.toFixed(2));
+  totalTips = getTotal(tipInputArray, multiplierArray);
 
   write("<br>Total: ");
   write(total);
   write("<br>Desired: ");
   write(desired);
+  write("<br>Total Tips: ");
+  write(totalTips);
   write("<br><br>");
 
   let errorExists = errorCheck(desired, trackDesired);
@@ -332,8 +338,10 @@ function harper() {
     return;
   }
 
-  writePullAmount(pullArray);
-  write("<br>For Tips <br>");
-  writePullAmount(tipInputArray);
+  writePullAmount(pullArray, false);
+  write("<br>");
+  if (totalTips > 0) {
+    writePullAmount(tipInputArray, true);
+  }
   createAndCopyObject(pullArray, tipInputArray);
 }
