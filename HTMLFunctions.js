@@ -41,31 +41,6 @@ function addEventListeners() {
     "penny",
   ];
 
-  // const relevantStrings = [
-  //   "hundred",
-  //   "fifty",
-  //   "twenty",
-  //   "ten",
-  //   "five",
-  //   "two",
-  //   "one",
-  //   "quarter",
-  //   "dime",
-  //   "nickel",
-  //   "penny",
-  //   "hundredTips",
-  //   "fiftyTips",
-  //   "twentyTips",
-  //   "tenTips",
-  //   "fiveTips",
-  //   "twoTips",
-  //   "oneTips",
-  //   "quarterTips",
-  //   "dimeTips",
-  //   "nickelTips",
-  //   "pennyTips",
-  // ];
-
   for (let i = 0; i < relevantStrings.length; i++) {
     document
       .getElementById(relevantStrings[i])
@@ -73,10 +48,9 @@ function addEventListeners() {
   }
 }
 
-function getInputInformation() {
+function getInputInformation(isTip) {
   const info = document.getElementById("form1");
-  const revenueInputArray = [];
-  // const tipInputArray = [];
+  const inputArray = [];
 
   const inputBillStrings = [
     "numHundred",
@@ -100,44 +74,32 @@ function getInputInformation() {
   for (let i = 0; i < inputBillStrings.length; i++) {
     let revenueName = inputBillStrings[i];
     let revenueValue = parseInt(info.elements[revenueName].value);
-    revenueInputArray.push(revenueValue);
-
-    // let tipName = revenueName + "Tips";
-    // let tipValue = parseInt(info.elements[tipName].value);
-    // tipInputArray.push(tipValue);
+    inputArray.push(revenueValue);
   }
 
   for (let i = 0; i < inputCoinStrings.length; i++) {
     let coinValue = coinValues[i];
     let revenueName = inputCoinStrings[i];
-    let revenueValue = parseInt(
-      (parseFloat(info.elements[revenueName].value) / coinValue).toFixed(0)
-    );
-    revenueInputArray.push(revenueValue);
+    let revenueValue = 0;
 
-    // let tipName = revenueName + "Tips";
-    // let tipValue = parseInt(
-    //   (parseFloat(info.elements[tipName].value) / coinValue).toFixed(0)
-    // );
-    // tipInputArray.push(tipValue);
+    //take a look at line 94, we can do better
+    if (!isTip) {
+      revenueValue = parseInt(info.elements[revenueName].value / coinValue);
+    } else {
+      revenueValue = parseInt(info.elements[revenueName].value);
+    }
+
+    inputArray.push(revenueValue);
   }
 
-  tipInputArray = new Array(11).fill(0);
-  revenueAndTip = [revenueInputArray, tipInputArray];
-
-  return [revenueInputArray, tipInputArray];
+  return inputArray;
 }
 
 function enableButton() {
-  const revenueInputArray = getInputInformation()[0];
-  const tipInputArray = getInputInformation()[1];
-  for (item in revenueInputArray) {
-    if (isNaN(revenueInputArray[item])) {
-      return;
-    }
-  }
-  for (item in tipInputArray) {
-    if (isNaN(tipInputArray[item])) {
+  //something weird happens with isTip = false
+  const inputArray = getInputInformation(true);
+  for (item in inputArray) {
+    if (isNaN(inputArray[item])) {
       return;
     }
   }
@@ -181,8 +143,13 @@ function toggleTheme() {
   }
 }
 
-function createAndCopyObject(pullArray, tipArray) {
-  const countdownObject = { revenue: {}, tips: {} };
+function createAndCopyObject(pullArray, isTip) {
+  let countdownObject = {};
+  if (isTip) {
+    countdownObject = { tips: {} };
+  } else {
+    countdownObject = { revenue: {} };
+  }
   const pullArrayKeys = [
     "pullHundred",
     "pullFifty",
@@ -198,8 +165,11 @@ function createAndCopyObject(pullArray, tipArray) {
   ];
 
   for (let i = 0; i < pullArrayKeys.length; i++) {
-    countdownObject["revenue"][pullArrayKeys[i]] = pullArray[i];
-    countdownObject["tips"][pullArrayKeys[i]] = tipArray[i];
+    if (isTip) {
+      countdownObject["tips"][pullArrayKeys[i]] = pullArray[i];
+    } else {
+      countdownObject["revenue"][pullArrayKeys[i]] = pullArray[i];
+    }
   }
 
   const copyObject =
@@ -211,6 +181,10 @@ function createAndCopyObject(pullArray, tipArray) {
 }
 
 function writePullAmount(pullArray, isTip) {
+  if (!pullArray.some((item) => item !== 0)) {
+    return;
+  }
+
   if (isTip) {
     write("Put the following in the tip envelope:");
   } else {
@@ -257,7 +231,6 @@ function writePullAmount(pullArray, isTip) {
     if (currencyAmount > 1 && standardEnglish) {
       write("s");
     }
-
     write("<br>");
   }
 }
@@ -300,48 +273,46 @@ function getTotal(revenueInputArray, multiplierArray) {
 addEventListeners();
 
 function harper() {
+  // ADD TIP PARAMETER TO THIS FUNCTION
   clearHTML();
-  const revenueInputArray = getInputInformation()[0];
-  const tipInputArray = getInputInformation()[1];
   const pullArray = new Array(11).fill(0);
-  const multiplierArray = [100, 50, 20, 10, 5, 2, 1, 0.25, 0.1, 0.05, 0.01];
+  const isTip = true;
 
-  let total = getTotal(revenueInputArray, multiplierArray);
-  let desired = total - 250;
-  let trackDesired = 0;
+  if (!isTip) {
+    const revenueInputArray = getInputInformation(isTip);
+    const multiplierArray = [100, 50, 20, 10, 5, 2, 1, 0.25, 0.1, 0.05, 0.01];
 
-  for (let i = 0; i < revenueInputArray.length; i++) {
-    let currencyAmount = revenueInputArray[i];
-    let currencyValue = multiplierArray[i];
-    for (let j = 0; j < currencyAmount; j++) {
-      if ((desired - trackDesired).toFixed(2) >= currencyValue) {
-        pullArray[i] += 1;
-        trackDesired += currencyValue;
+    let total = getTotal(revenueInputArray, multiplierArray);
+    let desired = total - 250;
+    let trackDesired = 0;
+
+    for (let i = 0; i < revenueInputArray.length; i++) {
+      let currencyAmount = revenueInputArray[i];
+      let currencyValue = multiplierArray[i];
+      for (let j = 0; j < currencyAmount; j++) {
+        if ((desired - trackDesired).toFixed(2) >= currencyValue) {
+          pullArray[i] += 1;
+          trackDesired += currencyValue;
+        }
       }
     }
+
+    trackDesired = parseFloat(trackDesired.toFixed(2));
+    desired = parseFloat(desired.toFixed(2));
+    write("Total: ");
+    write(total);
+    write("<br>Desired: ");
+    write(desired);
+    write("<br><br>");
+
+    let errorExists = errorCheck(desired, trackDesired);
+    if (errorExists) {
+      return;
+    }
+  } else {
+    const tipInputArray = getInputInformation(isTip);
+    pullArray = tipInputArray;
   }
-
-  trackDesired = parseFloat(trackDesired.toFixed(2));
-  desired = parseFloat(desired.toFixed(2));
-  totalTips = getTotal(tipInputArray, multiplierArray);
-
-  write("<br>Total: ");
-  write(total);
-  write("<br>Desired: ");
-  write(desired);
-  write("<br>Total Tips: ");
-  write(totalTips);
-  write("<br><br>");
-
-  let errorExists = errorCheck(desired, trackDesired);
-  if (errorExists) {
-    return;
-  }
-
-  writePullAmount(pullArray, false);
-  write("<br>");
-  if (totalTips > 0) {
-    writePullAmount(tipInputArray, true);
-  }
-  createAndCopyObject(pullArray, tipInputArray);
+  writePullAmount(pullArray, isTip);
+  createAndCopyObject(pullArray, isTip);
 }
