@@ -15,6 +15,8 @@ function clearInputs(reset) {
 }
 
 function reset() {
+  //do I want the reset button to reset the radio button?
+  //Also do I want to have this copy button even available??
   clearHTML();
   clearInputs(true);
   enableButton();
@@ -273,10 +275,9 @@ function getTotal(revenueInputArray, multiplierArray) {
 addEventListeners();
 
 function harper() {
-  // ADD TIP PARAMETER TO THIS FUNCTION
   clearHTML();
-  const pullArray = new Array(11).fill(0);
-  const isTip = true;
+  let pullArray = new Array(11).fill(0);
+  let isTip = document.getElementById("tips").checked;
 
   if (!isTip) {
     const revenueInputArray = getInputInformation(isTip);
