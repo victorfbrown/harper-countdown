@@ -3,13 +3,13 @@ function write(input) {
 }
 
 function clearInputs(reset) {
-  previousCopy =
-    document.getElementById("form1").elements["copyObject"].checked;
+  // previousCopy =
+  //   document.getElementById("form1").elements["copyObject"].checked;
   document.getElementById("form1").reset();
-  if (!reset) {
-    document.getElementById("form1").elements["copyObject"].checked =
-      previousCopy;
-  }
+  // if (!reset) {
+  //   document.getElementById("form1").elements["copyObject"].checked =
+  //     previousCopy;
+  // }
   const button = document.querySelector("button");
   button.disabled = true;
 }
@@ -206,8 +206,11 @@ function createAndCopyObject(pullArray, isTip) {
     }
   }
 
-  const copyObject =
-    document.getElementById("form1").elements["copyObject"].checked;
+  // const copyObject =
+  //   document.getElementById("form1").elements["copyObject"].checked;
+  const copyObject = true;
+  // I commented out the option to unclick the checkbox because I don't want anyone to ever manually submit things while I'm FM
+  // I'll update it whenever I transfer ownership over to the FM
   if (copyObject) {
     navigator.clipboard.writeText(JSON.stringify(countdownObject));
     write("Copied to Clipboard!");
@@ -310,7 +313,7 @@ function harper() {
   clearHTML();
   let pullArray = new Array(11).fill(0);
   const isTip = document.getElementById("tips").checked;
-
+  write("<br>");
   if (!isTip) {
     const revenueInputArray = getInputInformation(isTip);
     const multiplierArray = [100, 50, 20, 10, 5, 2, 1, 0.25, 0.1, 0.05, 0.01];
