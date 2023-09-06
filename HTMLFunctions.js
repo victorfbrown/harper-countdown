@@ -48,6 +48,34 @@ function addEventListeners() {
       .getElementById(relevantStrings[i])
       .addEventListener("input", enableButton);
   }
+
+  document.getElementById("tips").addEventListener("input", setInnerText);
+  document.getElementById("revenue").addEventListener("input", setInnerText);
+}
+
+function setInnerText() {
+  const isTip = document.getElementById("tips").checked;
+  const coinTextStrings = [
+    "quarterText",
+    "dimeText",
+    "nickelText",
+    "pennyText",
+  ];
+  const coinStrings = [
+    " of quarters?",
+    " of dimes?",
+    " of nickels?",
+    " of pennies?",
+  ];
+
+  for (let i = 0; i < coinTextStrings.length; i++) {
+    const coinName = coinTextStrings[i];
+    let relevantText = isTip
+      ? "Number" + coinStrings[i]
+      : "Value" + coinStrings[i];
+
+    document.getElementById(coinName).innerText = relevantText;
+  }
 }
 
 function getInputInformation(isTip) {
@@ -277,7 +305,7 @@ addEventListeners();
 function harper() {
   clearHTML();
   let pullArray = new Array(11).fill(0);
-  let isTip = document.getElementById("tips").checked;
+  const isTip = document.getElementById("tips").checked;
 
   if (!isTip) {
     const revenueInputArray = getInputInformation(isTip);
@@ -300,10 +328,9 @@ function harper() {
 
     trackDesired = parseFloat(trackDesired.toFixed(2));
     desired = parseFloat(desired.toFixed(2));
-    write("Total: ");
-    write(total);
-    write("<br>Desired: ");
-    write(desired);
+    write("Total: " + String(total));
+    write("<br>");
+    write("Desired: " + String(desired));
     write("<br><br>");
 
     let errorExists = errorCheck(desired, trackDesired);
