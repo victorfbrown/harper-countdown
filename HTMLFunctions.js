@@ -76,6 +76,10 @@ function setInnerText() {
 
     document.getElementById(coinName).innerText = relevantText;
   }
+
+  document.getElementById("submitButton").innerText = isTip
+    ? "Submit Tips"
+    : "Submit Revenue";
 }
 
 function getInputInformation(isTip) {
