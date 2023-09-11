@@ -62,10 +62,10 @@ function setInnerText() {
     "pennyText",
   ];
   const coinStrings = [
-    " of quarters?",
-    " of dimes?",
-    " of nickels?",
-    " of pennies?",
+    " of Quarters?",
+    " of Dimes?",
+    " of Nickels?",
+    " of Pennies?",
   ];
 
   for (let i = 0; i < coinTextStrings.length; i++) {
@@ -116,7 +116,6 @@ function getInputInformation(isTip) {
     let revenueName = inputCoinStrings[i];
     let revenueValue = 0;
 
-    //take a look at line 94, we can do better
     if (!isTip) {
       revenueValue = parseInt(info.elements[revenueName].value / coinValue);
     } else {
@@ -178,12 +177,7 @@ function toggleTheme() {
 }
 
 function createAndCopyObject(pullArray, isTip) {
-  let countdownObject = {};
-  if (isTip) {
-    countdownObject = { tips: {} };
-  } else {
-    countdownObject = { revenue: {} };
-  }
+  let countdownObject = isTip ? { tips: {} } : { revenue: {} };
   const pullArrayKeys = [
     "pullHundred",
     "pullFifty",
@@ -198,17 +192,14 @@ function createAndCopyObject(pullArray, isTip) {
     "pullPennies",
   ];
 
+  const typeObject = isTip ? "tips" : "revenue";
   for (let i = 0; i < pullArrayKeys.length; i++) {
-    if (isTip) {
-      countdownObject["tips"][pullArrayKeys[i]] = pullArray[i];
-    } else {
-      countdownObject["revenue"][pullArrayKeys[i]] = pullArray[i];
-    }
+    countdownObject[typeObject][pullArrayKeys[i]] = pullArray[i];
   }
 
+  const copyObject = true;
   // const copyObject =
   //   document.getElementById("form1").elements["copyObject"].checked;
-  const copyObject = true;
   // I commented out the option to unclick the checkbox because I don't want anyone to ever manually submit things while I'm FM
   // I'll update it whenever I transfer ownership over to the FM
   if (copyObject) {
