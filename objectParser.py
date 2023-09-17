@@ -70,4 +70,3 @@ def populate_spreadsheet(sheet, row, tips_object_col=tips_object_col, revenue_ob
         
         populate_row(sheet=sheet, tips_array=tips_array, revenue_array=revenue_array, row=row, individual_tips_start=individual_tips_start, individual_revenue_start=individual_revenue_start)
         row += 1
-

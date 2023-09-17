@@ -103,7 +103,13 @@ function getInputInformation(isTip) {
     "valPennies",
   ];
 
-  const coinValues = [0.25, 0.1, 0.05, 0.01];
+
+  const coinValuesObject = {
+    valQuarters: 0.25,
+    valDimes: 0.1,
+    valNickels: 0.05,
+    valPennies: 0.01,
+  };
 
   for (let i = 0; i < inputBillStrings.length; i++) {
     let revenueName = inputBillStrings[i];
@@ -112,8 +118,8 @@ function getInputInformation(isTip) {
   }
 
   for (let i = 0; i < inputCoinStrings.length; i++) {
-    let coinValue = coinValues[i];
     let revenueName = inputCoinStrings[i];
+    let coinValue = coinValuesObject[revenueName];
     let revenueValue = 0;
 
     if (!isTip) {
@@ -307,7 +313,23 @@ function harper() {
   write("<br>");
   if (!isTip) {
     const revenueInputArray = getInputInformation(isTip);
+    // const revenueStringsArray = []
     const multiplierArray = [100, 50, 20, 10, 5, 2, 1, 0.25, 0.1, 0.05, 0.01];
+    //rearrange revenueInputArray and multiplierArray in priority
+
+    const multiplierArrayObject = {
+      numHundred: 100,
+      numFifty: 50,
+      numTwenty: 20,
+      numTen: 10,
+      numFive: 5,
+      numTwo: 2,
+      numOne: 1,
+      valQuarters: 0.25,
+      valDimes: 0.1,
+      valNickels: 0.05,
+      valPennies: 0.01,
+    };
 
     let total = getTotal(revenueInputArray, multiplierArray);
     let desired = total - 250;
