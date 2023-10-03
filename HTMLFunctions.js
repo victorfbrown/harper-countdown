@@ -2,6 +2,13 @@ function write(input) {
   document.getElementById("demo").innerHTML += input;
 }
 
+function newline(amount) {
+  amount = typeof amount !== "undefined" ? amount : 1;
+  for (let i = 0; i < amount; i++) {
+    write("<br>");
+  }
+}
+
 function clearInputs(reset) {
   // previousCopy =
   //   document.getElementById("form1").elements["copyObject"].checked;
@@ -103,7 +110,6 @@ function getInputInformation(isTip) {
     "valPennies",
   ];
 
-
   const coinValuesObject = {
     valQuarters: 0.25,
     valDimes: 0.1,
@@ -123,11 +129,14 @@ function getInputInformation(isTip) {
     let revenueValue = 0;
 
     if (!isTip) {
-      revenueValue = parseInt(info.elements[revenueName].value / coinValue);
+      if (info.elements[revenueName].value == "") {
+        revenueValue = NaN;
+      } else {
+        revenueValue = Math.round(info.elements[revenueName].value / coinValue);
+      }
     } else {
       revenueValue = parseInt(info.elements[revenueName].value);
     }
-
     inputArray.push(revenueValue);
   }
 
@@ -135,8 +144,8 @@ function getInputInformation(isTip) {
 }
 
 function enableButton() {
-  //something weird happens with isTip = false
-  const inputArray = getInputInformation(true);
+  const isTip = document.getElementById("tips").checked;
+  const inputArray = getInputInformation(isTip);
   for (item in inputArray) {
     if (isNaN(inputArray[item])) {
       return;
@@ -224,7 +233,7 @@ function writePullAmount(pullArray, isTip) {
   } else {
     write("Pull out the following:");
   }
-  write("<br>");
+  newline();
   const pullArrayStrings = [
     " $100 bill",
     " $50 bill",
@@ -265,7 +274,7 @@ function writePullAmount(pullArray, isTip) {
     if (currencyAmount > 1 && standardEnglish) {
       write("s");
     }
-    write("<br>");
+    newline();
   }
 }
 
@@ -287,8 +296,9 @@ function errorCheck(desired, trackDesired) {
       Please check the fields and make sure they're all filled in, it's mathematically possible for there\
       to be no combination of money to remove, but the odds are super low. \
       Shoot me a text or email if you can't figure out any problems!<br> \
-       -Victor <br>"
+       -Victor"
     );
+    newline();
   } else {
     error = false;
   }
@@ -306,52 +316,134 @@ function getTotal(revenueInputArray, multiplierArray) {
 
 addEventListeners();
 
+function createCoinInputObject(coinInputArray) {
+  const inputCoinStrings = [
+    "numQuarters",
+    "numDimes",
+    "numNickels",
+    "numPennies",
+  ];
+  const coinInputObject = {};
+  for (let i = 0; i < inputCoinStrings.length; i++) {
+    coinInputObject[inputCoinStrings[i]] = coinInputArray[i];
+  }
+  return coinInputObject;
+}
+
+function subtractCoinInputObjects(object1, object2) {
+  const subtractedObject = {
+    numQuarters: object1["numQuarters"] - object2["numQuarters"],
+    numDimes: object1["numDimes"] - object2["numDimes"],
+    numNickels: object1["numNickels"] - object2["numNickels"],
+    numPennies: object1["numPennies"] - object2["numPennies"],
+  };
+  return subtractedObject;
+}
+
 function harper() {
   clearHTML();
   let pullArray = new Array(11).fill(0);
   const isTip = document.getElementById("tips").checked;
-  write("<br>");
+  newline();
   if (!isTip) {
     const revenueInputArray = getInputInformation(isTip);
-    // const revenueStringsArray = []
+    const billInputArray = revenueInputArray.slice(4);
+    const coinInputArray = revenueInputArray.slice(-4);
     const multiplierArray = [100, 50, 20, 10, 5, 2, 1, 0.25, 0.1, 0.05, 0.01];
-    //rearrange revenueInputArray and multiplierArray in priority
-
-    const multiplierArrayObject = {
-      numHundred: 100,
-      numFifty: 50,
-      numTwenty: 20,
-      numTen: 10,
-      numFive: 5,
-      numTwo: 2,
-      numOne: 1,
-      valQuarters: 0.25,
-      valDimes: 0.1,
-      valNickels: 0.05,
-      valPennies: 0.01,
-    };
 
     let total = getTotal(revenueInputArray, multiplierArray);
     let desired = total - 250;
     let trackDesired = 0;
 
-    for (let i = 0; i < revenueInputArray.length; i++) {
-      let currencyAmount = revenueInputArray[i];
+    for (let i = 0; i < billInputArray.length; i++) {
+      let currencyAmount = billInputArray[i];
       let currencyValue = multiplierArray[i];
       for (let j = 0; j < currencyAmount; j++) {
-        if ((desired - trackDesired).toFixed(2) >= currencyValue) {
+        if (parseInt(desired - trackDesired) >= currencyValue) {
           pullArray[i] += 1;
           trackDesired += currencyValue;
         }
       }
     }
 
+    // refactor this so we prioritize pennies, nickels, dimes, quarters
+    // need to figure out flowchart of how to do this
+
+    // Commented for Push
+    // const remainingCoinDifference = parseFloat(
+    //   (desired - trackDesired).toFixed(2)
+    // );
+    // write("coin difference: ");
+    // write(remainingCoinDifference);
+    // newline();
+
+    const coinMultiplierArrayObject = {
+      valQuarters: 0.25,
+      valDimes: 0.1,
+      valNickels: 0.05,
+      valPennies: 0.01,
+    };
+
+    const priorIndex = billInputArray.length;
+
+    // big coin prioritized when pulling out
+    for (let i = 0; i < coinInputArray.length; i++) {
+      let currencyAmount = coinInputArray[i];
+      let currencyValue = multiplierArray[priorIndex + i];
+      for (let j = 0; j < currencyAmount; j++) {
+        if ((desired - trackDesired).toFixed(2) >= currencyValue) {
+          pullArray[priorIndex + i] += 1;
+          trackDesired += currencyValue;
+        }
+      }
+    }
+
+    //PROBLEM!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // Commented for Push
+    //little coin prioritized when pulling out
+    // for (let i = 3; i > 0; i--) {
+    //   let currencyAmount = coinInputArray[i];
+    //   let currencyValue = multiplierArray[priorIndex + i];
+    //   write((desired - trackDesired).toFixed(2));
+    //   newline();
+    //   for (let j = 0; j < currencyAmount; j++) {
+    //     if ((desired - trackDesired).toFixed(2) >= currencyValue) {
+    //       pullArray[priorIndex + i] += 1;
+    //       trackDesired += currencyValue;
+    //     }
+    //   }
+    // }
+
+    const coinInputObject = createCoinInputObject(coinInputArray);
+    const idealCoinObject = createCoinInputObject(pullArray.slice(-4));
+    const remainingCoinsObject = subtractCoinInputObjects(
+      coinInputObject,
+      idealCoinObject
+    );
+
+    //here we rearrange the coins
+    // AHHHHHHHHHHHHHHHHHHHHHHHHHH
+    // remainingCoinsObject
+    // idealCoinObject['numPennies'] =
+    // AHHHHHHHHHHHHHHHHHHHHHHHHHH
+
+    // Commented for Push
+    // write("all coins:");
+    // write(JSON.stringify(coinInputObject));
+    // newline();
+    // write("prioritizing big:");
+    // write(JSON.stringify(idealCoinObject));
+    // newline();
+    // write("remaining coins:");
+    // write(JSON.stringify(remainingCoinsObject));
+    // newline();
+
     trackDesired = parseFloat(trackDesired.toFixed(2));
     desired = parseFloat(desired.toFixed(2));
     write("Total: " + String(total));
-    write("<br>");
+    newline();
     write("Desired: " + String(desired));
-    write("<br><br>");
+    newline(2);
 
     let errorExists = errorCheck(desired, trackDesired);
     if (errorExists) {
