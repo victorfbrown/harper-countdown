@@ -347,8 +347,21 @@ function harper() {
   newline();
   if (!isTip) {
     const revenueInputArray = getInputInformation(isTip);
-    const billInputArray = revenueInputArray.slice(4);
+    write(revenueInputArray);
+    const billInputArray = revenueInputArray.slice(0, 7);
     const coinInputArray = revenueInputArray.slice(-4);
+
+    // newline();
+    // write("-------------");
+    // newline();
+    // write(billInputArray);
+    // newline();
+    // write("-------------");
+    // newline();
+    // write(coinInputArray);
+    // newline();
+    // write("-------------");
+
     const multiplierArray = [100, 50, 20, 10, 5, 2, 1, 0.25, 0.1, 0.05, 0.01];
 
     let total = getTotal(revenueInputArray, multiplierArray);
@@ -377,13 +390,6 @@ function harper() {
     // write(remainingCoinDifference);
     // newline();
 
-    const coinMultiplierArrayObject = {
-      valQuarters: 0.25,
-      valDimes: 0.1,
-      valNickels: 0.05,
-      valPennies: 0.01,
-    };
-
     const priorIndex = billInputArray.length;
 
     // big coin prioritized when pulling out
@@ -400,7 +406,7 @@ function harper() {
 
     //PROBLEM!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     // Commented for Push
-    //little coin prioritized when pulling out
+    // little coin prioritized when pulling out
     // for (let i = 3; i > 0; i--) {
     //   let currencyAmount = coinInputArray[i];
     //   let currencyValue = multiplierArray[priorIndex + i];
