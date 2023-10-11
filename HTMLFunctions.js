@@ -347,7 +347,7 @@ function harper() {
   newline();
   if (!isTip) {
     const revenueInputArray = getInputInformation(isTip);
-    write(revenueInputArray);
+    // write(revenueInputArray);
     const billInputArray = revenueInputArray.slice(0, 7);
     const coinInputArray = revenueInputArray.slice(-4);
 
